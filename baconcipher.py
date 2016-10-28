@@ -49,8 +49,10 @@ class BaconCipher:
                 if char.isupper():
                     baconian_string += "B"
                 elif char.islower():
-                    baconian_string += "A"
-                    
+                    baconian_string += "A" 
+        
+        #split baconian sequence into chunks of five characters each, then
+        #do an inverse lookup to translate each chunk into its ascii equivalent.
         for b in re.findall('.....', baconian_string):
             plaintext += self.cipher_key.keys()[self.cipher_key.values().index(b)]
         
