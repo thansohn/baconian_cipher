@@ -1,3 +1,4 @@
+
 import json
 import re
 
@@ -43,7 +44,7 @@ class BaconCipher:
     def decrypt(self, passphrase):
         baconian_string = ""
         plaintext = ""
-
+        
         for char in passphrase:
             if char != ' ':
                 if char.isupper():
@@ -54,8 +55,7 @@ class BaconCipher:
         #split baconian sequence into chunks of five characters each, then
         #do an inverse lookup to translate each chunk into its ascii equivalent.
         for b in re.findall('.....', baconian_string):
-            plaintext += self.cipher_key.keys()[self.cipher_key.values().index(b)]
-        
+            plaintext += [key for key, value in self.cipher_key.items() if value == b][0]
         return plaintext
 
 def main():
@@ -64,12 +64,12 @@ def main():
     passphrase = "the quick brown fox jumped over the lazy dog because he was late for class"
     bc.load_keys("cipher.json")
     
-    print "Plaintext: " + plaintext
-    print "Passphrase: " + passphrase
+    print("Plaintext: " + plaintext)
+    print("Passphrase: " + passphrase)
 
     text = bc.encrypt(plaintext, passphrase)
-    print "Encryption: " + text
-    print "Decryption: " + bc.decrypt(text)
+    print("Encryption: " + text)
+    print("Decryption: " + bc.decrypt(text))
 
 if __name__ == "__main__":
     main()
