@@ -1,4 +1,3 @@
-
 import json
 import re
 
@@ -14,9 +13,9 @@ class BaconCipher:
         plaintext_length = sum(char != ' ' for char in plaintext)
         passphrase_length = sum(char != ' ' for char in passphrase)
 
-        assert (plaintext_length * 5 == passphrase_length), \
-        "Passphrase must be %r characters long, sans spaces. Your passphrase is " \
-        "%r characters long." % ((plaintext_length * 5), passphrase_length)
+        if (plaintext_length * 5) != passphrase_length:
+            raise ValueError("Passphrase must be {0} characters long, sans spaces. Your passphrase " \
+                  "is {1} characters long.".format(plaintext_length * 5, passphrase_length))
 
         baconian_string = ""
         new_passphrase = ""
@@ -29,7 +28,7 @@ class BaconCipher:
 
         #translate baconian sequence into new passphase
         for char in passphrase:
-            if char != ' ':
+            if not char.isspace():
                 if baconian_string[current_baconian_char] == "B":
                     new_passphrase += char.upper()
                 elif baconian_string[current_baconian_char] == "A":
@@ -54,8 +53,8 @@ class BaconCipher:
         
         #split baconian sequence into chunks of five characters each, then
         #do an inverse lookup to translate each chunk into its ascii equivalent.
-        for b in re.findall('.....', baconian_string):
-            plaintext += [key for key, value in self.cipher_key.items() if value == b][0]
+        for bacon_chunk in re.findall('.....', baconian_string):
+            plaintext += [key for key, value in self.cipher_key.items() if value == bacon_chunk][0]
         return plaintext
 
 def main():
